@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/utils/helpers.dart';
+import '../widgets/personal_info_sheet.dart';
+import '../widgets/company_info_sheet.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -71,7 +73,7 @@ class ProfileScreen extends StatelessWidget {
         ),
         const SizedBox(height: 12),
         const Text(
-          'Ahmet Toptancı',
+          'Ahmet',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -79,7 +81,7 @@ class ProfileScreen extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         const Text(
-          'ahmet@toptanci.com',
+          'ahmet@deneme.com',
           style: TextStyle(
             fontSize: 14,
             color: Colors.grey,
@@ -102,7 +104,7 @@ class ProfileScreen extends StatelessWidget {
               ),
               const SizedBox(width: 4),
               Text(
-                'Onaylı Toptancı',
+                'Onaylı',
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
@@ -117,38 +119,42 @@ class ProfileScreen extends StatelessWidget {
   }
 
   Widget _buildProfileInfo(BuildContext context) {
-    return _buildCard(
-      context,
-      title: 'Kişisel Bilgiler',
-      icon: Icons.person,
-      children: [
-        _buildInfoRow(Icons.phone, 'Telefon', '+90 555 123 4567'),
-        const Divider(height: 20),
-        _buildInfoRow(Icons.email, 'E-posta', 'ahmet@toptanci.com'),
-        const Divider(height: 20),
-        _buildInfoRow(Icons.location_on, 'Adres', 'İstanbul, Türkiye'),
-        const Divider(height: 20),
-        _buildInfoRow(Icons.calendar_today, 'Üyelik Tarihi', '15.05.2023'),
-      ],
+    return GestureDetector(
+      onTap: () => _showPersonalInfoBottomSheet(context),
+      child: _buildSectionCard(
+        context,
+        title: 'Kişisel Bilgiler',
+        icon: Icons.person,
+      ),
     );
   }
 
   Widget _buildCompanyInfo(BuildContext context) {
-    return _buildCard(
-      context,
-      title: 'Şirket Bilgileri',
-      icon: Icons.business,
-      children: [
-        _buildInfoRow(
-            Icons.business_center, 'Şirket Adı', 'Ahmet Toptancı Ltd. Şti.'),
-        const Divider(height: 20),
-        _buildInfoRow(Icons.receipt, 'Vergi No', '1234567890'),
-        const Divider(height: 20),
-        _buildInfoRow(Icons.location_city, 'Vergi Dairesi', 'İstanbul'),
-        const Divider(height: 20),
-        _buildInfoRow(
-            Icons.phone_in_talk, 'Şirket Telefonu', '+90 212 123 4567'),
-      ],
+    return GestureDetector(
+      onTap: () => _showCompanyInfoBottomSheet(context),
+      child: _buildSectionCard(
+        context,
+        title: 'Şirket Bilgileri',
+        icon: Icons.business,
+      ),
+    );
+  }
+
+  void _showPersonalInfoBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const PersonalInfoSheet(),
+    );
+  }
+
+  void _showCompanyInfoBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const CompanyInfoSheet(),
     );
   }
 
@@ -187,6 +193,56 @@ class ProfileScreen extends StatelessWidget {
           switchValue: false,
         ),
       ],
+    );
+  }
+
+  Widget _buildSectionCard(
+    BuildContext context, {
+    required String title,
+    required IconData icon,
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 14),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 2,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Icon(
+                icon,
+                color: Theme.of(context).primaryColor,
+                size: 20,
+              ),
+              const SizedBox(width: 12),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const Icon(
+            Icons.edit,
+            color: Colors.grey,
+            size: 18,
+          ),
+        ],
+      ),
     );
   }
 
@@ -235,38 +291,6 @@ class ProfileScreen extends StatelessWidget {
           ...children,
         ],
       ),
-    );
-  }
-
-  Widget _buildInfoRow(IconData icon, String title, String value) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          color: Colors.blue,
-          size: 18,
-        ),
-        const SizedBox(width: 10),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: TextStyle(
-                fontSize: 13,
-                color: Colors.grey[600],
-              ),
-            ),
-            Text(
-              value,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 

@@ -16,27 +16,7 @@ class HomeScreen extends ConsumerStatefulWidget {
 }
 
 class _HomeScreenState extends ConsumerState<HomeScreen> {
-  final TextEditingController _searchController = TextEditingController();
-  final FocusNode _searchFocusNode = FocusNode();
-  bool _isSearching = false;
   int _currentIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _searchFocusNode.addListener(() {
-      setState(() {
-        _isSearching = _searchFocusNode.hasFocus;
-      });
-    });
-  }
-
-  @override
-  void dispose() {
-    _searchController.dispose();
-    _searchFocusNode.dispose();
-    super.dispose();
-  }
 
   void _openProfileScreen() {
     Navigator.of(context).push(
@@ -87,9 +67,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 16),
-                  // Arama çubuğu
-                  _buildSearchBar(),
                   const SizedBox(height: 16),
                   // Kategori listesi
                   _buildCategories(),
@@ -165,7 +142,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
             const Text(
-              'Ahmet Toptancı',
+              'Ahmet',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -186,42 +163,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(8),
-        border: _isSearching
-            ? Border.all(color: Theme.of(context).primaryColor, width: 1.5)
-            : null,
-      ),
-      child: TextField(
-        controller: _searchController,
-        focusNode: _searchFocusNode,
-        decoration: InputDecoration(
-          hintText: 'Ürün ara...',
-          hintStyle: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 14,
-          ),
-          prefixIcon: Icon(
-            Icons.search,
-            color: Colors.grey[600],
-            size: 20,
-          ),
-          border: InputBorder.none,
-          contentPadding: const EdgeInsets.symmetric(vertical: 10),
-        ),
-        onSubmitted: (value) {
-          if (value.isNotEmpty) {
-            // Arama işlemi
-            Helpers.showSnackBar(context, 'Aranan: $value');
-          }
-        },
-      ),
     );
   }
 
