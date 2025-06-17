@@ -70,8 +70,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                 floating: false,
                 pinned: true,
                 snap: false,
-                elevation: 0,
-                backgroundColor: Colors.white,
                 title: _buildHeader(),
                 automaticallyImplyLeading: false,
               ),
