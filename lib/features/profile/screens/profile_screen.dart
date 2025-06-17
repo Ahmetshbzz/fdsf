@@ -4,8 +4,68 @@ import '../../../core/utils/helpers.dart';
 import '../widgets/personal_info_sheet.dart';
 import '../widgets/company_info_sheet.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  String _selectedLanguage = 'Türkçe (TR)';
+
+  void _showLanguageOptions(BuildContext context) {
+    final languages = [
+      {'name': 'Türkçe (TR)', 'code': 'tr'},
+      {'name': 'English (EN)', 'code': 'en'},
+      {'name': 'Polski (PL)', 'code': 'pl'},
+    ];
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+      ),
+      builder: (context) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(bottom: 16),
+              child: Text(
+                'Dil Seçimi',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            const Divider(height: 1),
+            for (final language in languages)
+              ListTile(
+                title: Text(language['name']!),
+                trailing: _selectedLanguage == language['name']
+                    ? const Icon(Icons.check, color: Colors.green)
+                    : null,
+                onTap: () {
+                  setState(() {
+                    _selectedLanguage = language['name']!;
+                  });
+                  Navigator.pop(context);
+                  // Burada dil değişikliği için gerekli işlemler yapılabilir
+                  Helpers.showSnackBar(
+                    context,
+                    'Dil değiştirildi: ${language['name']}',
+                  );
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -178,11 +238,46 @@ class ProfileScreen extends StatelessWidget {
           hasSwitch: false,
         ),
         const Divider(height: 20),
-        _buildSettingRow(
-          context,
-          icon: Icons.language,
-          title: 'Dil',
-          hasSwitch: false,
+        GestureDetector(
+          onTap: () => _showLanguageOptions(context),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.language,
+                    color: Theme.of(context).primaryColor,
+                    size: 18,
+                  ),
+                  const SizedBox(width: 10),
+                  const Text(
+                    'Dil',
+                    style: TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    _selectedLanguage,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  const Icon(
+                    Icons.chevron_right,
+                    color: Colors.grey,
+                    size: 18,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
         const Divider(height: 20),
         _buildSettingRow(
